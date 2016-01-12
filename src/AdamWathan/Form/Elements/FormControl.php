@@ -9,7 +9,7 @@ abstract class FormControl extends Element
 
     protected function setName($name)
     {
-        $this->setAttribute('name', $name);
+        $this->setAttribute('name', str_replace("'","",$name));
     }
 
     public function required()
