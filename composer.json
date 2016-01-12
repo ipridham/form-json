@@ -1,0 +1,26 @@
+{
+    "name": "ipridham/form-json",
+    "description": "A basic framework agnostic form building package with a few extra niceties like remembering old input and retrieving error messages.",
+    "authors": [
+        {
+            "name": "Ian Pridham",
+            "email": "info@oxygen24.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "require-dev": {
+        "illuminate/support": "4.*",
+        "phpunit/phpunit": "3.7.*",
+        "mockery/mockery": "~0.9",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "AdamWathan\\Form": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
