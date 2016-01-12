@@ -194,7 +194,7 @@ class FormBuilder
 
     public function hasError($name)
     {
-        if (! isset($this->errorStore)) {
+        if (!isset($this->errorStore)) {
             return false;
         }
 
@@ -203,11 +203,11 @@ class FormBuilder
 
     public function getError($name, $format = null)
     {
-        if (! isset($this->errorStore)) {
+        if (!isset($this->errorStore)) {
             return null;
         }
 
-        if (! $this->hasError($name)) {
+        if (!$this->hasError($name)) {
             return '';
         }
 
@@ -222,7 +222,7 @@ class FormBuilder
 
     public function bind($model)
     {
-        $this->model = is_array($model) ? (object) $model : $model;
+        $this->model = is_array($model) ? (object)$model : $model;
     }
 
     public function getValueFor($name)
@@ -240,7 +240,7 @@ class FormBuilder
 
     protected function hasOldInput()
     {
-        if (! isset($this->oldInput)) {
+        if (!isset($this->oldInput)) {
             return false;
         }
 
@@ -254,15 +254,29 @@ class FormBuilder
 
     protected function hasModelValue($name)
     {
-        if (! isset($this->model)) {
+        if (!isset($this->model)) {
             return false;
         }
-        return isset($this->model->{$name}) || method_exists($this->model, '__get');
+        return isset($this->model->{$name}) || $this->checkForJSON($name) || method_exists($this->model, '__get');
+    }
+
+    protected function checkForJSON($name)
+    {
+        if (strpos(" " . $name, "json") > 0) {
+            $arrayName = explode("[",$name)[0];
+            $array = $this->model->$arrayName;
+            $key = str_replace("]","",explode("[",$name)[1]);
+            $key = str_replace("'","",$key);
+            return $array[$key];
+        } else {
+            return $this->model->{$name};
+        }
     }
 
     protected function getModelValue($name)
     {
-        return $this->escape($this->model->{$name});
+
+        return $this->escape($this->checkForJSON($name));
     }
 
     protected function escape($value)
