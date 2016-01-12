@@ -266,8 +266,10 @@ class FormBuilder
             $arrayName = explode("[",$name)[0];
             $array = $this->model->$arrayName;
             $key = str_replace("]","",explode("[",$name)[1]);
-            $key = str_replace("'","",$key);
-            return $array[$key];
+            $key = str_replace("'","",$key);]
+            if(isset($array[$key])) {
+            	return $array[$key];
+            }
         } else {
             return $this->model->{$name};
         }
