@@ -262,13 +262,28 @@ class FormBuilder
 
     protected function checkForJSON($name)
     {
+
         if (strpos(" " . $name, "json") > 0) {
-            $arrayName = explode("[",$name)[0];
+            $arrayName = explode("[", $name)[0];
             $array = $this->model->$arrayName;
-            $key = str_replace("]","",explode("[",$name)[1]);
-            $key = str_replace("'","",$key);]
-            if(isset($array[$key])) {
-            	return $array[$key];
+            if (substr_count($name,"[") > 1) {
+                //extra level of nesting
+                $name = str_replace("'", "", $name);
+                $name = str_replace('"', "", $name);
+                $firstLevel = explode("[",$name)[1];
+                $firstLevel = str_replace("]", "",$firstLevel);
+                $secondLevel = explode("[",$name)[2];
+                $secondLevel = str_replace("]", "",$secondLevel);
+                if (isset($array[$firstLevel][$secondLevel])) {
+                    return $array[$firstLevel][$secondLevel];
+                }
+            } else {
+                $key = str_replace("]", "", explode("[", $name)[1]);
+                $key = str_replace("'", "", $key);
+                $key = str_replace('"', "", $key);
+                if (isset($array[$key])) {
+                    return $array[$key];
+                }
             }
         } else {
             return $this->model->{$name};
