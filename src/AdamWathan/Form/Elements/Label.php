@@ -34,7 +34,7 @@ class Label extends Element
 
     public function forId($name)
     {
-        $this->setAttribute('for', $name);
+        $this->setAttribute('for', str_slug($name));
         return $this;
     }
 
