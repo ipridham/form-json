@@ -286,7 +286,9 @@ class FormBuilder
                 }
             }
         } else {
-            return $this->model->{$name};
+             if(isset($this->model->{$name})) {
+                return $this->model->{$name};
+            }
         }
     }
 
