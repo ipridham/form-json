@@ -1,20 +1,20 @@
 <?php namespace AdamWathan\Form;
 
-use AdamWathan\Form\Elements\Text;
-use AdamWathan\Form\Elements\Password;
-use AdamWathan\Form\Elements\Checkbox;
-use AdamWathan\Form\Elements\RadioButton;
 use AdamWathan\Form\Elements\Button;
-use AdamWathan\Form\Elements\Select;
-use AdamWathan\Form\Elements\TextArea;
-use AdamWathan\Form\Elements\Label;
-use AdamWathan\Form\Elements\FormOpen;
-use AdamWathan\Form\Elements\Hidden;
-use AdamWathan\Form\Elements\File;
+use AdamWathan\Form\Elements\Checkbox;
 use AdamWathan\Form\Elements\Date;
 use AdamWathan\Form\Elements\Email;
-use AdamWathan\Form\OldInput\OldInputInterface;
+use AdamWathan\Form\Elements\File;
+use AdamWathan\Form\Elements\FormOpen;
+use AdamWathan\Form\Elements\Hidden;
+use AdamWathan\Form\Elements\Label;
+use AdamWathan\Form\Elements\Password;
+use AdamWathan\Form\Elements\RadioButton;
+use AdamWathan\Form\Elements\Select;
+use AdamWathan\Form\Elements\Text;
+use AdamWathan\Form\Elements\TextArea;
 use AdamWathan\Form\ErrorStore\ErrorStoreInterface;
+use AdamWathan\Form\OldInput\OldInputInterface;
 
 class FormBuilder
 {
@@ -93,13 +93,18 @@ class FormBuilder
         return $email;
     }
 
-    public function hidden($name)
+    public function hidden($name, $value = null)
     {
         $hidden = new Hidden($name);
 
-        if (!is_null($value = $this->getValueFor($name))) {
+        if ($value) {
             $hidden->value($value);
+        } else {
+            if (!is_null($value = $this->getValueFor($name))) {
+                $hidden->value($value);
+            }
         }
+
 
         return $hidden;
     }
@@ -223,6 +228,7 @@ class FormBuilder
     public function bind($model)
     {
         $this->model = is_array($model) ? (object)$model : $model;
+        return $this->hidden('model', class_basename($model))->data('id', $model->id);
     }
 
     public function getValueFor($name)
@@ -266,14 +272,14 @@ class FormBuilder
         if (strpos(" " . $name, "json") > 0) {
             $arrayName = explode("[", $name)[0];
             $array = $this->model->$arrayName;
-            if (substr_count($name,"[") > 1) {
+            if (substr_count($name, "[") > 1) {
                 //extra level of nesting
                 $name = str_replace("'", "", $name);
                 $name = str_replace('"', "", $name);
-                $firstLevel = explode("[",$name)[1];
-                $firstLevel = str_replace("]", "",$firstLevel);
-                $secondLevel = explode("[",$name)[2];
-                $secondLevel = str_replace("]", "",$secondLevel);
+                $firstLevel = explode("[", $name)[1];
+                $firstLevel = str_replace("]", "", $firstLevel);
+                $secondLevel = explode("[", $name)[2];
+                $secondLevel = str_replace("]", "", $secondLevel);
                 if (isset($array[$firstLevel][$secondLevel])) {
                     return $array[$firstLevel][$secondLevel];
                 }
@@ -286,7 +292,7 @@ class FormBuilder
                 }
             }
         } else {
-             if(isset($this->model->{$name})) {
+            if (isset($this->model->{$name})) {
                 return $this->model->{$name};
             }
         }

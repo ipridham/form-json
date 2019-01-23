@@ -12,7 +12,7 @@ class FormOpen extends Element
 
     public function render()
     {
-        $result  = '<form';
+        $result = '<form';
         $result .= $this->renderAttributes();
         $result .= '>';
 
@@ -22,6 +22,10 @@ class FormOpen extends Element
 
         if ($this->hasHiddenMethod()) {
             $result .= $this->hiddenMethod->render();
+        }
+
+        if (array_key_exists('model', $this->attributes)) {
+            $result .= '<input name="model" type="hidden" value="' . $this->getAttribute('model') . '"/>';
         }
 
         return $result;
@@ -100,5 +104,14 @@ class FormOpen extends Element
     public function multipart()
     {
         return $this->encodingType('multipart/form-data');
+    }
+
+    public function translates($model)
+    {
+        if (class_exists($model, true)) {
+            $this->setAttribute('model', class_basename($model));
+            $this->setAttribute('autocomplete', 'off');
+        }
+        return $this;
     }
 }

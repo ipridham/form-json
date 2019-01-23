@@ -100,6 +100,11 @@ abstract class Element
         return $result;
     }
 
+    public function translatable()
+    {
+        $this->addClass('translatable');
+    }
+
     public function __call($method, $params)
     {
         $params = count($params) ? $params : array($method);
