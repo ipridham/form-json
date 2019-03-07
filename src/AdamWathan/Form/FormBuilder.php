@@ -228,7 +228,6 @@ class FormBuilder
     public function bind($model)
     {
         $this->model = is_array($model) ? (object)$model : $model;
-        return $this->hidden('model', class_basename($model))->data('id', $model->id);
     }
 
     public function getValueFor($name)
